@@ -1,0 +1,10 @@
+cached-property==2.0.1
+chevron==0.14.0
+defusedxml==0.7.1
+fonttools==4.67.0
+fpdf2==2.8.9
+frozendict==2.4.7
+genanki==0.13.1
+pillow==13.0.0
+pymupdf==1.28.2
+PyYAML==6.0.3
