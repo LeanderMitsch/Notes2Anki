@@ -34,9 +34,11 @@ def slice_pdf_and_create_deck(pdf_path, output_apkg):
   os.makedirs(TEMP_IMAGE_DIR, exist_ok=True)
 
   # Automatically derive a clean deck name from the PDF filename
-  # e.g., "physics_chapter_1.pdf" -> "Physics Chapter 1"
   file_base_name = os.path.splitext(os.path.basename(pdf_path))[0]
   deck_name = file_base_name.replace("_", " ").title()
+
+  # Create a safe prefix for image filenames to prevent collisions across decks
+  safe_base_name = "".join(c if c.isalnum() else "_" for c in file_base_name)
 
   model_id = 1607392319
   deck_id = 2059400110
@@ -97,8 +99,11 @@ def slice_pdf_and_create_deck(pdf_path, output_apkg):
         skipped_counter += 1
         continue
 
-      front_filename = f"p{page_num+1}_r{row+1}_front.png"
-      back_filename = f"p{page_num+1}_r{row+1}_back.png"
+      # Unique filenames per deck/PDF using safe_base_name
+      front_filename = (
+          f"{safe_base_name}_p{page_num+1}_r{row+1}_front.png"
+      )
+      back_filename = f"{safe_base_name}_p{page_num+1}_r{row+1}_back.png"
 
       front_path = os.path.join(TEMP_IMAGE_DIR, front_filename)
       back_path = os.path.join(TEMP_IMAGE_DIR, back_filename)
@@ -127,10 +132,10 @@ def slice_pdf_and_create_deck(pdf_path, output_apkg):
   my_package.media_files = media_files
   my_package.write_to_file(output_apkg)
 
-  print(f"\nSuccess!")
-  print(f" - Deck Name: {deck_name}")
-  print(f" - Created cards: {card_counter}")
-  print(f" - Skipped empty rows: {skipped_counter}")
+  print("\nSuccess!")
+  print(f"Deck Name: {deck_name}")
+  print(f"Created cards: {card_counter}")
+  print(f"Skipped empty rows: {skipped_counter}")
   print(f"Anki package saved to: {output_apkg}")
 
 
